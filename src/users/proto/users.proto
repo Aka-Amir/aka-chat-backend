@@ -1,0 +1,39 @@
+syntax = 'proto3';
+
+package aka_users;
+
+
+service UsersService {
+    rpc Create (CreateUser) returns (CreateUsersResponse);
+    rpc FindAll (Empty) returns (Empty);
+    
+    rpc Delete (UserWithID) returns (ActionResponse);
+    rpc Update (UpdateUser) returns (ActionResponse);
+}
+
+
+message CreateUser {
+    string username = 1;
+    string phoneNumber = 2;
+}
+
+message CreateUsersResponse {
+    string authToken = 1;
+    string _id = 2;
+    string token = 3;
+}
+
+message UserWithID {
+    string ID = 1;
+}
+
+message UpdateUser {
+    string ID = 1;
+    optional string username = 2;
+}
+
+message ActionResponse {
+    int32 count = 1;
+}
+
+message Empty {}
