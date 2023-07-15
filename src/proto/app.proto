@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package aka_app;
+
+
+service AppService {
+    rpc App(Empty) returns (Empty);
+}
+
+message Empty {}
