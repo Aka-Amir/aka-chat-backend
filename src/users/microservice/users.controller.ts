@@ -1,9 +1,9 @@
 import { Controller } from '@nestjs/common';
 
-import { UsersService } from './users.service';
 import { GrpcMethod } from '@nestjs/microservices';
-import { ICreateUser, ICreateUserResponse } from '../interfaces/ICreateUser';
 import { Observable, map } from 'rxjs';
+import { ICreateUser, ICreateUserResponse } from '../interfaces/ICreateUser';
+import { UsersService } from './users.service';
 
 @Controller()
 export class UsersController {
