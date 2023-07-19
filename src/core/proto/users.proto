@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "./users_messages.proto";
+
+package aka_users;
+
+service UsersService {
+    rpc Create (CreateUser) returns (UserModel);
+    rpc Login (LoginRequest) returns (LoginResponse);
+    rpc AutoLogin (Empty) returns (AutoLoginResponse); // Put header
+}

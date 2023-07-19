@@ -12,11 +12,29 @@ export class UsersService {
     const doc = new this.model({
       username: user.username,
       phoneNumber: user.phoneNumber,
+      password: user.password,
     });
     return from(doc.save()).pipe(
       map((item) => ({
         _id: item._id.toString(),
       })),
+    );
+  }
+
+  findUserByPhoneNumber(phoneNumber: string) {
+    return from(
+      this.model
+        .findOne({
+          phoneNumber: phoneNumber,
+        })
+        .exec(),
+    ).pipe(
+      map((user) => {
+        if (!user) {
+          throw new Error('404');
+        }
+        return user;
+      }),
     );
   }
 }

@@ -1,12 +1,14 @@
-import { Controller, Inject, OnModuleInit } from '@nestjs/common';
 import {
-  ClientGrpc,
-  GrpcMethod,
-  GrpcStreamMethod,
-} from '@nestjs/microservices';
+  Controller,
+  Inject,
+  OnModuleInit,
+  NotFoundException,
+} from '@nestjs/common';
+import { ClientGrpc, GrpcMethod, RpcException } from '@nestjs/microservices';
+import { ICreateUser, ICreateUserResponse } from '../interfaces/ICreateUser';
 import { IUserService } from '../interfaces/IUserService';
-import { ICreateUser } from '../interfaces/ICreateUser';
-import { Observable, Subject } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
+import { ILogin } from '../interfaces';
 
 @Controller()
 export class UsersApiController implements OnModuleInit {
@@ -17,23 +19,17 @@ export class UsersApiController implements OnModuleInit {
   }
 
   @GrpcMethod('UsersService', 'Create')
-  create(data: ICreateUser) {
+  create(data: ICreateUser): Observable<ICreateUserResponse> {
     return this.service.Create(data);
   }
 
-  @GrpcStreamMethod('UsersService', 'Message')
-  message(message: Observable<{ message: string }>) {
-    const sub = new Subject<{ message: string }>();
-    message.subscribe({
-      next: (data) => {
-        console.log(data);
-        sub.next(data);
-      },
-      complete: () => {
-        sub.complete();
-      },
-    });
-
-    return sub.asObservable();
+  @GrpcMethod('UsersService', 'Login')
+  login(data: ILogin.ILoginRequest): Observable<ILogin.ILoginResponse> {
+    return this.service.Login(data).pipe(
+      catchError((e) => {
+        console.log(e);
+        throw new RpcException(new NotFoundException());
+      }),
+    );
   }
 }

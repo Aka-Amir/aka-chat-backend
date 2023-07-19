@@ -13,8 +13,8 @@ async function bootstrap() {
       options: {
         package: ['aka_app', 'aka_users'],
         protoPath: [
-          join(__dirname, 'proto/app.proto'),
-          join(__dirname, 'proto/users.proto'),
+          join(__dirname, 'core/proto/app.proto'),
+          join(__dirname, 'core/proto/users.proto'),
         ],
         credentials: ServerCredentials.createInsecure(),
         url: 'localhost:3100',

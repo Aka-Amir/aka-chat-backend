@@ -1,14 +1,11 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
-import { MongooseModule } from '@nestjs/mongoose';
+import { CommonModule } from '../../core/common/common.module';
 import { colUsers } from '../entities/user.entity';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
-  imports: [
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/chat-app'),
-    MongooseModule.forFeature([colUsers]),
-  ],
+  imports: [CommonModule.registerForMicroservice([colUsers])],
   controllers: [UsersController],
   providers: [UsersService],
 })
