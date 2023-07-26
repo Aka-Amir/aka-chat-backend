@@ -1,0 +1,4 @@
+syntax = "proto3";
+import "./common_messages.proto";
+package aka_messages;
+

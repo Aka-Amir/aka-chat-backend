@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "./messages_messages.proto";
+
+package aka_messages;
+
+service MessagesService {
+    rpc Test(Empty) returns (Empty);
+}

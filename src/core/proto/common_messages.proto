@@ -3,3 +3,7 @@ syntax = "proto3";
 package aka_common_messages;
 
 message Empty {}
+
+message StatusResponse {
+    bool status = 1;
+}

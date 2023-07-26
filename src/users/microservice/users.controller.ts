@@ -1,4 +1,4 @@
-import { Controller, NotFoundException } from '@nestjs/common';
+import { Controller, NotFoundException, UseInterceptors } from '@nestjs/common';
 
 import { GrpcMethod } from '@nestjs/microservices';
 import { Observable, map, catchError } from 'rxjs';
@@ -6,15 +6,17 @@ import { Observable, map, catchError } from 'rxjs';
 import { UsersService } from './users.service';
 
 import { ICreateUser, ICreateUserResponse } from '../interfaces/ICreateUser';
-import { ILogin } from '../interfaces';
+import { ILogin, IUpdateUser } from '../interfaces';
 
-import { AUTO_LOGIN, CREATE, LOGIN, USERS_SERVICE } from './users.constants';
+import * as MSConstants from '../entities/users.constants';
+import { GrpcErrorHandlerInterceptor } from 'src/core/interceptors';
 
+@UseInterceptors(GrpcErrorHandlerInterceptor)
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @GrpcMethod(USERS_SERVICE, CREATE)
+  @GrpcMethod(MSConstants.USERS_SERVICE, MSConstants.CREATE)
   createUser(data: ICreateUser): Observable<ICreateUserResponse> {
     return this.usersService.createUser(data).pipe(
       map(
@@ -26,7 +28,7 @@ export class UsersController {
     );
   }
 
-  @GrpcMethod(USERS_SERVICE, LOGIN)
+  @GrpcMethod(MSConstants.USERS_SERVICE, MSConstants.LOGIN)
   login(payload: ILogin.ILoginRequest): Observable<ILogin.ILoginResponse> {
     return this.usersService
       .findUserByPhoneNumber(payload.phoneNumber)
@@ -48,7 +50,20 @@ export class UsersController {
       );
   }
 
-  @GrpcMethod(USERS_SERVICE, AUTO_LOGIN)
+  @GrpcMethod(MSConstants.USERS_SERVICE, MSConstants.UPDATE)
+  updateUser(
+    payload: IUpdateUser.IUpdateUser,
+  ): Observable<IUpdateUser.IStatusResponse> {
+    return this.usersService.updateUser(payload).pipe(
+      map((data) => {
+        return {
+          status: data.acknowledged,
+        };
+      }),
+    );
+  }
+
+  @GrpcMethod(MSConstants.USERS_SERVICE, MSConstants.AUTO_LOGIN)
   autoLogin(): Observable<ILogin.IAutoLoginResponse> {
     throw new Error('Not implemented yet !');
   }

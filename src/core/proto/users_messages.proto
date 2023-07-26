@@ -12,6 +12,13 @@ message CreateUser {
     string username = 1;
     string phoneNumber = 2;
     string password = 3;
+    optional string profileImage = 4;
+}
+
+message UpdateUser {
+    string userID = 1;
+    optional string username = 2;
+    optional string profileImage = 3;
 }
 
 message LoginRequest {

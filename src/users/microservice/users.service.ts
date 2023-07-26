@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { from, map } from 'rxjs';
 import { UserModel, colUsers } from '../entities/user.entity';
 import { ICreateUser } from '../interfaces/ICreateUser';
+import { IUpdateUser } from '../interfaces/IUpdateUser';
 
 @Injectable()
 export class UsersService {
@@ -35,6 +36,25 @@ export class UsersService {
         }
         return user;
       }),
+    );
+  }
+
+  updateUser(updateData: IUpdateUser) {
+    const data = { ...updateData };
+    delete data.userID;
+    return from(
+      this.model
+        .updateOne(
+          {
+            _id: updateData.userID,
+          },
+          {
+            $set: {
+              ...data,
+            },
+          },
+        )
+        .exec(),
     );
   }
 }
