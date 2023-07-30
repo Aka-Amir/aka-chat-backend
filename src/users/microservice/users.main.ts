@@ -2,7 +2,6 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { NestFactory } from '@nestjs/core';
 import { UsersModule } from './users.module';
 import { join } from 'path';
-import { Logger } from '@nestjs/common';
 
 export async function usersBootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -17,7 +16,6 @@ export async function usersBootstrap() {
     },
   );
   app.listen();
-  Logger.debug(process.pid, 'UsersMicroservice');
 }
 
 usersBootstrap().then(() => {

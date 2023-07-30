@@ -2,7 +2,6 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { NestFactory } from '@nestjs/core';
 import { MessagesModule } from './messages.module';
 import { join } from 'path';
-import { Logger } from '@nestjs/common';
 
 export async function messagesBootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -16,8 +15,6 @@ export async function messagesBootstrap() {
       },
     },
   );
-
-  Logger.debug(process.pid, 'MessagesMicroservice');
 
   app.listen();
 }
