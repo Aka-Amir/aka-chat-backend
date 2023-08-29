@@ -12,7 +12,7 @@ export class UsersService {
   createUser(user: ICreateUser) {
     const doc = new this.model({
       username: user.username,
-      phoneNumber: user.phoneNumber,
+      userId: user.userId,
       password: user.password,
     });
     return from(doc.save()).pipe(

@@ -1,6 +1,6 @@
 export interface ICreateUser {
+  userId: string;
   username: string;
-  phoneNumber: string;
   password: string;
 }
 

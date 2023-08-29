@@ -1,13 +1,9 @@
 import { Controller, NotFoundException, UseInterceptors } from '@nestjs/common';
-
 import { GrpcMethod } from '@nestjs/microservices';
 import { Observable, map, catchError } from 'rxjs';
-
 import { UsersService } from './users.service';
-
 import { ICreateUser, ICreateUserResponse } from '../interfaces/ICreateUser';
 import { ILogin, IUpdateUser } from '../interfaces';
-
 import * as MSConstants from '../entities/users.constants';
 import { GrpcErrorHandlerInterceptor } from 'src/core/interceptors';
 

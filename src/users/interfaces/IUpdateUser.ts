@@ -1,5 +1,5 @@
 export interface IUpdateUser {
-  userID: string;
+  _id: string;
   username?: string;
   profileImage?: string;
 }
