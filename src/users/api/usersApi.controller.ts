@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Inject,
+  InternalServerErrorException,
   NotFoundException,
   OnModuleInit,
   Post,
@@ -10,9 +12,8 @@ import {
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable, catchError } from 'rxjs';
 import * as MSConstants from '../entities/users.constants';
-import { ILogin, IUpdateUser } from '../interfaces';
-import { ICreateUser, ICreateUserResponse } from '../interfaces/ICreateUser';
-import { IUserService } from '../interfaces';
+import { ILogin, IUpdateUser, IUserService } from '../interfaces';
+import { ICreateUser } from '../interfaces/ICreateUser';
 
 @Controller('users')
 export class UsersApiController implements OnModuleInit {
@@ -27,8 +28,15 @@ export class UsersApiController implements OnModuleInit {
   }
 
   @Post('create')
-  create(@Body() data: ICreateUser): Observable<ICreateUserResponse> {
-    return this.service.Create(data);
+  create(@Body() data: ICreateUser): Observable<ILogin.ILoginResponse> {
+    return this.service.Create(data).pipe(
+      catchError((e) => {
+        if ((e.details as string).includes('E11000')) {
+          throw new ForbiddenException('duplicated_userId');
+        }
+        throw new InternalServerErrorException();
+      }),
+    );
   }
 
   @Post('login')

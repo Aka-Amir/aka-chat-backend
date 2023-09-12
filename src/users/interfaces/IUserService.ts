@@ -1,11 +1,11 @@
 import { Observable } from 'rxjs';
-import { ICreateUser, ICreateUserResponse } from './ICreateUser';
+import { IStatusResponse } from 'src/core/interfaces/GlobalResponses';
+import { ICreateUser } from './ICreateUser';
 import { ILoginRequest, ILoginResponse } from './ILogin';
 import { IUpdateUser } from './IUpdateUser';
-import { IStatusResponse } from 'src/core/interfaces/GlobalResponses';
 
 export interface IUserService {
-  Create(payload: ICreateUser): Observable<ICreateUserResponse>;
+  Create(payload: ICreateUser): Observable<ILoginResponse>;
   Login(payload: ILoginRequest): Observable<ILoginResponse>;
   Update(payload: IUpdateUser): Observable<IStatusResponse>;
 }

@@ -1,13 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { from, map } from 'rxjs';
-import { UserModel, colUsers } from '../entities/user.entity';
+import { UserDocument, UserModel, colUsers } from '../entities/user.entity';
 import { ICreateUser } from '../interfaces/ICreateUser';
 import { IUpdateUser } from '../interfaces/IUpdateUser';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(colUsers.name) private model: UserModel) {}
+  constructor(
+    @InjectModel(colUsers.name) private model: UserModel,
+    private readonly jwt: JwtService,
+  ) {}
+
+  signUser(user: UserDocument) {
+    const authToken = this.jwt.sign({
+      username: user.username,
+      userId: user.userId,
+      profileImage: user.profileImage,
+    });
+    const refreshToken = this.jwt.sign({
+      userId: user.userId,
+      privateId: user._id.toString(),
+    });
+
+    return {
+      authToken,
+      refreshToken,
+    };
+  }
 
   createUser(user: ICreateUser) {
     const doc = new this.model({
@@ -17,16 +38,17 @@ export class UsersService {
     });
     return from(doc.save()).pipe(
       map((item) => ({
+        ...item,
         _id: item._id.toString(),
       })),
     );
   }
 
-  findUserByPhoneNumber(phoneNumber: string) {
+  findUserByUserID(userId: string) {
     return from(
       this.model
         .findOne({
-          phoneNumber: phoneNumber,
+          userId,
         })
         .exec(),
     ).pipe(
@@ -41,12 +63,12 @@ export class UsersService {
 
   updateUser(updateData: IUpdateUser) {
     const data = { ...updateData };
-    delete data.userID;
+    delete data._id;
     return from(
       this.model
         .updateOne(
           {
-            _id: updateData.userID,
+            _id: updateData._id,
           },
           {
             $set: {
