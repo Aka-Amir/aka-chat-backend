@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "./messages_messages.proto";
+import "./common_messages.proto";
 
 package aka_messages;
 

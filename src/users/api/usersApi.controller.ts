@@ -56,3 +56,4 @@ export class UsersApiController implements OnModuleInit {
     return this.service.Update(payload);
   }
 }
+

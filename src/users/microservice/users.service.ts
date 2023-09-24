@@ -79,4 +79,24 @@ export class UsersService {
         .exec(),
     );
   }
+
+  findUser(username: string) {
+    return from(
+      this.model
+        .find(
+          {
+            userId: {
+              $regex: `^${username}*`,
+            },
+          },
+          {
+            password: 0,
+          },
+        )
+        .exec(),
+    ).pipe(
+      map((x) => x.map((i) => i.toObject() as Omit<UserModel, 'password'>)),
+    );
+  }
 }
+

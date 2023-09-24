@@ -3,9 +3,10 @@ import { GrpcMethod } from '@nestjs/microservices';
 import { Observable, catchError, map } from 'rxjs';
 import { GrpcErrorHandlerInterceptor } from 'src/core/interceptors';
 import * as MSConstants from '../entities/users.constants';
-import { ILogin, IUpdateUser } from '../interfaces';
+import { ILogin, ISeachUser, IUpdateUser } from '../interfaces';
 import { ICreateUser } from '../interfaces/ICreateUser';
 import { UsersService } from './users.service';
+import { UserDocument } from '../entities/user.entity';
 
 @UseInterceptors(GrpcErrorHandlerInterceptor)
 @Controller()
@@ -16,7 +17,7 @@ export class UsersController {
   createUser(data: ICreateUser): Observable<ILogin.ILoginResponse> {
     return this.usersService
       .createUser(data)
-      .pipe(map((user) => this.usersService.signUser(user)));
+      .pipe(map((user) => this.usersService.signUser(user as UserDocument)));
   }
 
   @GrpcMethod(MSConstants.USERS_SERVICE, MSConstants.LOGIN)
@@ -38,6 +39,17 @@ export class UsersController {
       );
   }
 
+  @GrpcMethod(MSConstants.USERS_SERVICE, MSConstants.SEARCH)
+  searchUser(
+    payload: ISeachUser.ISearchUser,
+  ): Observable<ISeachUser.ISearchUserResponse> {
+    return this.usersService.findUser(payload.userID).pipe(
+      map((data) => ({
+        data,
+      })),
+    );
+  }
+
   @GrpcMethod(MSConstants.USERS_SERVICE, MSConstants.UPDATE)
   updateUser(
     payload: IUpdateUser.IUpdateUser,
@@ -56,3 +68,4 @@ export class UsersController {
     throw new Error('Not implemented yet !');
   }
 }
+

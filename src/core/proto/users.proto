@@ -1,16 +1,16 @@
 syntax = "proto3";
-
-import "./users_messages.proto";
-
+import "common_messages.proto";
+import "users_messages.proto";
 package aka_users;
 
 service UsersService {
     rpc Create (CreateUser) returns (LoginResponse);
-    
     rpc Login (LoginRequest) returns (LoginResponse);
-    
     // Put header
     rpc AutoLogin (Empty) returns (AutoLoginResponse); 
-
     rpc Update (UpdateUser) returns (StatusResponse);
+    rpc Search (SearchUser) returns (SearchResponse);
 }
+
+
+message Empty {}

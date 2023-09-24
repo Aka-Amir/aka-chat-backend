@@ -4,8 +4,9 @@ package aka_users;
 
 message UserModel {
     string username = 1;
-    string phoneNumber = 2;
-    string _id = 3;
+    string _id = 2;
+    string userId = 3;
+    string profileImage = 4;
 }
 
 message CreateUser {
@@ -34,4 +35,12 @@ message LoginResponse {
 
 message AutoLoginResponse {
     string _id = 1;
+}
+
+message SearchUser {
+    string userID = 1;
+}
+
+message SearchResponse {
+    reapeated UserModel data = 1;   
 }
