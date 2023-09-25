@@ -22,4 +22,3 @@ import { UsersApiSocket } from './usersApi.gateway';
   providers: [UsersApiSocket],
 })
 export class UsersApi {}
-

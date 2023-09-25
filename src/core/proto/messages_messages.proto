@@ -1,4 +1,60 @@
 syntax = "proto3";
 import "./common_messages.proto";
+import "./users_messages.proto";
 package aka_messages;
 
+message ChatModel {
+  repeated UserModel users = 1;
+  string createdAt = 2;
+  repeated string logs = 3;
+}
+
+message MessageModel {
+  UserModel sender = 1;
+  string sentAt = 2;
+  string payload = 3;
+  string chat = 4;
+}
+
+message PopulatedMessageModel {
+  UserModel sender = 1;
+  string sentAt = 2;
+  string payload = 3;
+  ChatModel chat = 4;
+}
+
+message CreateChat {
+  string senderID = 1;
+  repeated string members = 2;
+}
+
+message CreateChatResponse {
+  string chatID = 1;
+}
+
+message SendMessage {
+  string payload = 1;
+  string chatId = 2;
+  string userID = 3;
+}
+
+message SendMessageResponse {
+  string id = 1;
+  string sentAt = 2;
+}
+
+message GetChats {
+  string userId = 1;
+}
+
+message GetChatsResponse {
+  repeated ChatModel data = 1;
+}
+
+message GetMessagesRequest {
+  string chatId =1;
+}
+
+message GetMessagesResponse {
+  repeated MessageModel data = 1;
+}

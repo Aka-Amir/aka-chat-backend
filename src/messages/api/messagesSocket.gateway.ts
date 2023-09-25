@@ -1,4 +1,5 @@
-import { Logger } from '@nestjs/common';
+import { Inject, Logger, OnModuleInit } from '@nestjs/common';
+import { ClientGrpc } from '@nestjs/microservices';
 import {
   ConnectedSocket,
   MessageBody,
@@ -9,21 +10,50 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { ICreateChannel } from '../interfaces/ICreateChannel';
+import * as MsgConst from '../entities/messages.constants';
+import { ICreateChat } from '../interfaces';
+import { IMessagesService } from '../interfaces/IMessagesService';
 
-@WebSocketGateway(8000)
-export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+@WebSocketGateway(8000, {
+  path: '/messages',
+})
+export class ChatGateway
+  implements OnModuleInit, OnGatewayConnection, OnGatewayDisconnect
+{
+  private service: IMessagesService;
+
+  constructor(@Inject(MsgConst.MESSAGES_SERVICE) private client: ClientGrpc) {}
+
+  onModuleInit() {
+    this.service = this.client.getService<IMessagesService>(
+      MsgConst.MESSAGES_SERVICE,
+    );
+  }
+
   @WebSocketServer()
   private server: Server;
 
   handleDisconnect(client: any) {
     Logger.log('user disconnected !', client.id);
   }
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: Socket) {
     Logger.log('user connected !', client.id);
   }
 
-  @SubscribeMessage('createChannel')
-  onMessage(@MessageBody() body: ICreateChannel) {}
+  @SubscribeMessage('createChat')
+  createChat(
+    @MessageBody() body: ICreateChat,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    console.log(body);
+    const sub = this.service.StartChat(body).subscribe({
+      next: (data) => {
+        if (socket.disconnected) {
+          sub.unsubscribe();
+          return;
+        }
+        socket.emit('createChat', data);
+      },
+    });
+  }
 }
-

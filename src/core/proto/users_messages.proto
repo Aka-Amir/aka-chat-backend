@@ -42,5 +42,5 @@ message SearchUser {
 }
 
 message SearchResponse {
-    reapeated UserModel data = 1;   
+    repeated UserModel data = 1;   
 }

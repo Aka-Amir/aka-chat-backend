@@ -10,7 +10,7 @@ import { Socket } from 'socket.io';
 import * as MSConstants from '../entities/users.constants';
 import { IUserService } from '../interfaces';
 
-@WebSocketGateway(8000, {
+@WebSocketGateway(8001, {
   path: '/users',
 })
 export class UsersApiSocket implements OnModuleInit {
@@ -37,4 +37,3 @@ export class UsersApiSocket implements OnModuleInit {
     });
   }
 }
-
