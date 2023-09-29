@@ -8,6 +8,6 @@ package aka_messages;
 service MessagesService {
     rpc FindChats(GetChats) returns (GetChatsResponse);
     rpc StartChat(CreateChat) returns (CreateChatResponse);
-    rpc EmitMessage(SendMessage) returns (SendMessageResponse);
+    rpc EmitMessage(stream SendMessage) returns (stream SendMessageResponse);
     rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse);
 }

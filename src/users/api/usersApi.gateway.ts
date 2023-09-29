@@ -12,6 +12,7 @@ import { IUserService } from '../interfaces';
 
 @WebSocketGateway(8001, {
   path: '/users',
+  cors: '*',
 })
 export class UsersApiSocket implements OnModuleInit {
   private service: IUserService;

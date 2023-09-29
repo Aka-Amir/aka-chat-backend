@@ -2,10 +2,12 @@ import {
   Body,
   Controller,
   ForbiddenException,
+  Get,
   Inject,
   InternalServerErrorException,
   NotFoundException,
   OnModuleInit,
+  Param,
   Post,
   Put,
 } from '@nestjs/common';
